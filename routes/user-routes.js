@@ -22,29 +22,6 @@ async function checkUserExists(req, res, next) {
     }
 }
 
-// router.post('/users', async (req, res) => {
-//     try {
-//         const { firstName, lastName, phoneNumber, email, password, accountNumber, address} = req.body;
-//
-//         if (!firstName || !lastName || !phoneNumber || !email || !password || !accountNumber || !address) {
-//             return res.status(400).json({ message: "All fields are required." });
-//         }
-//
-//         const userService = new UserService();
-//         const userId = await userService.createUser(req.body);
-//         console.log("Returned User ID (String):", userId);
-//
-//         return res.status(201).json({ message: "User created successfully", userId: userId });
-//     } catch (error) {
-//         if (error.message === 'Email or Phone Number already in use.') {
-//             return res.status(400).json({ message: 'Email or Phone Number already in use.' });
-//         }
-//         console.error("Error creating user:", error);
-//         return res.status(500).json({ message: "Error creating user", error: error.message });
-//     }
-// });
-import jwt from 'jsonwebtoken'; // Import jsonwebtoken
-
 router.post('/users', async (req, res) => {
     try {
         const { firstName, lastName, phoneNumber, email, password, accountNumber, address} = req.body;
@@ -56,13 +33,8 @@ router.post('/users', async (req, res) => {
         const userService = new UserService();
         const userId = await userService.createUser(req.body);
         console.log("Returned User ID (String):", userId);
-        const token = jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-        return res.status(201).json({
-            message: "User created successfully",
-            userId: userId,
-            token: token
-        });
+        return res.status(201).json({ message: "User created successfully", userId: userId });
     } catch (error) {
         if (error.message === 'Email or Phone Number already in use.') {
             return res.status(400).json({ message: 'Email or Phone Number already in use.' });
@@ -71,6 +43,34 @@ router.post('/users', async (req, res) => {
         return res.status(500).json({ message: "Error creating user", error: error.message });
     }
 });
+// import jwt from 'jsonwebtoken'; // Import jsonwebtoken
+//
+// router.post('/users', async (req, res) => {
+//     try {
+//         const { firstName, lastName, phoneNumber, email, password, accountNumber, address} = req.body;
+//
+//         if (!firstName || !lastName || !phoneNumber || !email || !password || !accountNumber || !address) {
+//             return res.status(400).json({ message: "All fields are required." });
+//         }
+//
+//         const userService = new UserService();
+//         const userId = await userService.createUser(req.body);
+//         console.log("Returned User ID (String):", userId);
+//         const token = jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: '1h' });
+//
+//         return res.status(201).json({
+//             message: "User created successfully",
+//             userId: userId,
+//             token: token
+//         });
+//     } catch (error) {
+//         if (error.message === 'Email or Phone Number already in use.') {
+//             return res.status(400).json({ message: 'Email or Phone Number already in use.' });
+//         }
+//         console.error("Error creating user:", error);
+//         return res.status(500).json({ message: "Error creating user", error: error.message });
+//     }
+// });
 
 
 router.post('/createProduct/:userId', upload.single('image'), async (req, res) => {
